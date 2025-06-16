@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إدارة المهام الذكية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(90deg, #1976d2 10%, #6dd5ed 100%);">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#" onclick="showPage('home')">
+                <img src="https://i.postimg.cc/L6V8pBw5/Chat-GPT-Image-28-2025-11-26-39.png" alt="شعار" style="width: 40px; height: 40px; margin-left: 10px; border-radius: 8px;">
+                <span>إدارة المهام الذكية</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('home')">
+                            <i class="fas fa-home"></i> الرئيسية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('reports')">
+                            <i class="fas fa-chart-bar"></i> البلاغات
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('about')">
+                            <i class="fas fa-users"></i> من نحن
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('program')">
+                            <i class="fas fa-info-circle"></i> حول البرنامج
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('settings')">
+                            <i class="fas fa-cog"></i> الإعدادات
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page (Original Task Management) -->
+    <div id="homePage" class="page-content">
+        <!-- Header -->
+        <div class="app-header">
+            <img src="https://i.postimg.cc/L6V8pBw5/Chat-GPT-Image-28-2025-11-26-39.png" alt="شعار" class="custom-logo-img">
+            <span class="app-title">إدارة المهام الذكية</span>
+        </div>
+        
+        <!-- Reminder Icon (hidden by default) -->
+        <div id="reminderAlert" class="reminder-icon-main" style="display:none;">
+            <i class="fa-solid fa-bell"></i>
+            <span id="reminderAlertMsg"></span>
+        </div>
+
+        <div class="table-big">
+            <h2>لوحة إدارة المهام</h2>
+            <button class="add-task-btn" onclick="openTaskModal()">+ إضافة مهمة جديدة</button>
+            <div class="table-responsive">
+                <table class="table align-middle table-bordered" id="tasksTable">
+                    <thead>
+                        <tr>
+                            <th>م</th>
+                            <th>العنوان</th>
+                            <th>المُسند إليه</th>
+                            <th>تاريخ البداية</th>
+                            <th>تاريخ النهاية</th>
+                            <th>تذكير</th>
+                            <th>المرفق</th>
+                            <th>الحالة</th>
+                            <th>الأولوية</th>
+                            <th>نسبة الإنجاز</th>
+                            <th>تشـيك</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasksBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Page -->
+    <div id="reportsPage" class="page-content" style="display: none;">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-bar"></i> داشبورد البلاغات</h2>
+                <button class="btn btn-primary" onclick="printReports()">
+                    <i class="fas fa-print"></i> طباعة التقرير
+                </button>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="totalReports">0</h4>
+                                    <p>إجمالي البلاغات</p>
+                                </div>
+                                <i class="fas fa-file-alt fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="completedReports">0</h4>
+                                    <p>البلاغات المكتملة</p>
+                                </div>
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="pendingReports">0</h4>
+                                    <p>البلاغات المعلقة</p>
+                                </div>
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="urgentReports">0</h4>
+                                    <p>البلاغات العاجلة</p>
+                                </div>
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter and Search -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="searchReports" placeholder="البحث في البلاغات...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filterStatus">
+                        <option value="">جميع الحالات</option>
+                        <option value="open">مفتوحة</option>
+                        <option value="progress">قيد التنفيذ</option>
+                        <option value="discuss">نقاش</option>
+                        <option value="done">منجزة</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filterPriority">
+                        <option value="">جميع الأولويات</option>
+                        <option value="high">مرتفعة</option>
+                        <option value="low">منخفضة</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-secondary w-100" onclick="clearFilters()">مسح الفلاتر</button>
+                </div>
+            </div>
+
+            <!-- Reports Table -->
+            <div class="table-responsive">
+                <table class="table table-striped" id="reportsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>رقم البلاغ</th>
+                            <th>العنوان</th>
+                            <th>المُسند إليه</th>
+                            <th>تاريخ الإنشاء</th>
+                            <th>تاريخ الانتهاء</th>
+                            <th>الحالة</th>
+                            <th>الأولوية</th>
+                            <th>نسبة الإنجاز</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Us Page -->
+    <div id="aboutPage" class="page-content" style="display: none;">
+        <div class="container mt-4">
+            <h2 class="text-center mb-4"><i class="fas fa-users"></i> من نحن</h2>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>رؤيتنا</h4>
+                            <p>نسعى لتكون الشركة الرائدة في مجال تطوير حلول إدارة المهام الذكية التي تساعد المؤسسات على تحقيق أهدافها بكفاءة عالية.</p>
+                            
+                            <h4>مهمتنا</h4>
+                            <p>تقديم أفضل الحلول التقنية لإدارة المهام والمشاريع بطريقة سهلة ومبتكرة، مع التركيز على تحسين الإنتاجية وتسهيل التعاون بين الفرق.</p>
+                            
+                            <h4>قيمنا</h4>
+                            <ul>
+                                <li><strong>الابتكار:</strong> نسعى دائماً لتطوير حلول مبتكرة تلبي احتياجات عملائنا</li>
+                                <li><strong>الجودة:</strong> نلتزم بتقديم منتجات عالية الجودة تفوق توقعات العملاء</li>
+                                <li><strong>الشفافية:</strong> نؤمن بالتواصل الواضح والصادق مع جميع شركائنا</li>
+                                <li><strong>التطوير المستمر:</strong> نحرص على التعلم والتطوير المستمر لفريقنا ومنتجاتنا</li>
+                            </ul>
+                            
+                            <h4>فريق العمل</h4>
+                            <p>يتكون فريقنا من مجموعة من المطورين والمصممين المتخصصين في تطوير الحلول التقنية، مع خبرة تزيد عن 10 سنوات في مجال تطوير البرمجيات.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Program Page -->
+    <div id="programPage" class="page-content" style="display: none;">
+        <div class="container mt-4">
+            <h2 class="text-center mb-4"><i class="fas fa-info-circle"></i> حول البرنامج</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>نظام إدارة المهام الذكية</h4>
+                            <p>نظام شامل لإدارة المهام والمشاريع يساعد المؤسسات والأفراد على تنظيم أعمالهم وتتبع تقدمهم بطريقة فعالة ومنظمة.</p>
+                            
+                            <h4>الميزات الرئيسية</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li><i class="fas fa-check text-success"></i> إنشاء وإدارة المهام</li>
+                                        <li><i class="fas fa-check text-success"></i> تعيين المهام للموظفين</li>
+                                        <li><i class="fas fa-check text-success"></i> تتبع نسبة الإنجاز</li>
+                                        <li><i class="fas fa-check text-success"></i> نظام التذكيرات</li>
+                                        <li><i class="fas fa-check text-success"></i> إرفاق الملفات</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li><i class="fas fa-check text-success"></i> تقارير مفصلة</li>
+                                        <li><i class="fas fa-check text-success"></i> إحصائيات شاملة</li>
+                                        <li><i class="fas fa-check text-success"></i> واجهة سهلة الاستخدام</li>
+                                        <li><i class="fas fa-check text-success"></i> دعم اللغة العربية</li>
+                                        <li><i class="fas fa-check text-success"></i> تصميم متجاوب</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <h4>معلومات تقنية</h4>
+                            <table class="table table-striped">
+                                <tr>
+                                    <td><strong>الإصدار:</strong></td>
+                                    <td>1.0.0</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>تاريخ الإصدار:</strong></td>
+                                    <td>يونيو 2025</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>التقنيات المستخدمة:</strong></td>
+                                    <td>HTML5, CSS3, JavaScript, Bootstrap</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>المتصفحات المدعومة:</strong></td>
+                                    <td>Chrome, Firefox, Safari, Edge</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>الأجهزة المدعومة:</strong></td>
+                                    <td>أجهزة سطح المكتب، الأجهزة اللوحية، الهواتف الذكية</td>
+                                </tr>
+                            </table>
+                            
+                            <h4>الدعم والمساعدة</h4>
+                            <p>للحصول على الدعم التقني أو الاستفسارات، يرجى التواصل معنا عبر:</p>
+                            <ul>
+                                <li><i class="fas fa-envelope"></i> البريد الإلكتروني: support@taskmanagement.com</li>
+                                <li><i class="fas fa-phone"></i> الهاتف: +966 11 234 5678</li>
+                                <li><i class="fas fa-globe"></i> الموقع الإلكتروني: www.taskmanagement.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settingsPage" class="page-content" style="display: none;">
+        <div class="container mt-4">
+            <h2 class="text-center mb-4"><i class="fas fa-cog"></i> الإعدادات</h2>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="settingsForm">
+                                <h4>إعدادات النظام</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">اسم المؤسسة</label>
+                                    <input type="text" class="form-control" id="companyName" value="إدارة المهام الذكية">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">البريد الإلكتروني للإشعارات</label>
+                                    <input type="email" class="form-control" id="notificationEmail" value="admin@taskmanagement.com">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">المنطقة الزمنية</label>
+                                    <select class="form-select" id="timezone">
+                                        <option value="Asia/Riyadh" selected>الرياض (GMT+3)</option>
+                                        <option value="Asia/Dubai">دبي (GMT+4)</option>
+                                        <option value="Asia/Kuwait">الكويت (GMT+3)</option>
+                                        <option value="Africa/Cairo">القاهرة (GMT+2)</option>
+                                    </select>
+                                </div>
+                                
+                                <h4>إعدادات التذكيرات</h4>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                        <label class="form-check-label" for="emailNotifications">
+                                            إرسال تذكيرات عبر البريد الإلكتروني
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="browserNotifications" checked>
+                                        <label class="form-check-label" for="browserNotifications">
+                                            عرض تذكيرات في المتصفح
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">وقت التذكير المسبق (بالدقائق)</label>
+                                    <input type="number" class="form-control" id="reminderTime" value="30" min="5" max="1440">
+                                </div>
+                                
+                                <h4>إعدادات العرض</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">عدد المهام في الصفحة</label>
+                                    <select class="form-select" id="tasksPerPage">
+                                        <option value="10">10</option>
+                                        <option value="25" selected>25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">نمط العرض</label>
+                                    <select class="form-select" id="displayMode">
+                                        <option value="light" selected>فاتح</option>
+                                        <option value="dark">داكن</option>
+                                    </select>
+                                </div>
+                                
+                                <h4>إعدادات النسخ الاحتياطي</h4>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="autoBackup" checked>
+                                        <label class="form-check-label" for="autoBackup">
+                                            النسخ الاحتياطي التلقائي
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">تكرار النسخ الاحتياطي</label>
+                                    <select class="form-select" id="backupFrequency">
+                                        <option value="daily" selected>يومياً</option>
+                                        <option value="weekly">أسبوعياً</option>
+                                        <option value="monthly">شهرياً</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success" onclick="saveSettings()">
+                                        <i class="fas fa-save"></i> حفظ الإعدادات
+                                    </button>
+                                    <button type="button" class="btn btn-warning" onclick="resetSettings()">
+                                        <i class="fas fa-undo"></i> استعادة الافتراضي
+                                    </button>
+                                    <button type="button" class="btn btn-info" onclick="exportSettings()">
+                                        <i class="fas fa-download"></i> تصدير الإعدادات
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="importSettings()">
+                                        <i class="fas fa-upload"></i> استيراد الإعدادات
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal (from original code) -->
+    <div class="modal fade" id="taskModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">إضافة / تعديل مهمة</h3>
+            <button type="button" class="btn-close" aria-label="Close" onclick="closeTaskModal()"></button>
+        </div>
+        <div class="modal-body">
+        <form id="taskForm" onsubmit="saveTask(event)">
+            <input type="hidden" id="taskId">
+            <label>عنوان المهمة:</label>
+            <input type="text" id="taskTitle" class="form-control mb-2" required>
+            <label>المُسند إليه:</label>
+            <input type="text" id="taskAssignee" class="form-control mb-2" placeholder="مثال: محمد أحمد" required>
+            <label>تاريخ البداية:</label>
+            <input type="date" id="taskStartDate" class="form-control mb-2" required>
+            <label>تاريخ النهاية:</label>
+            <input type="date" id="taskEndDate" class="form-control mb-2" required>
+            <label>تاريخ/وقت التذكير:</label>
+            <input type="datetime-local" id="taskReminder" class="form-control mb-2">
+            <label>المرفق (اختياري):</label>
+            <input type="file" id="taskAttachment" class="form-control mb-2" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+            <label>الحالة:</label>
+            <select id="taskStatus" class="form-select mb-2">
+                <option value="open">مفتوحة</option>
+                <option value="progress">قيد التنفيذ</option>
+                <option value="discuss">نقاش</option>
+                <option value="done">منجزة</option>
+            </select>
+            <label>الأولوية:</label>
+            <select id="taskPriority" class="form-select mb-2">
+                <option value="high">مرتفعة</option>
+                <option value="low">منخفضة</option>
+            </select>
+            <label>نسبة الإنجاز (%):</label>
+            <input type="number" id="taskProgress" min="0" max="100" class="form-control mb-2" required>
+            <label>تفاصيل إضافية:</label>
+            <textarea id="taskDetails" class="form-control mb-2"></textarea>
+            <button type="submit" class="add-task-btn" style="margin:0;">حفظ</button>
+        </form>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Details Modal (from original code) -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="detailsTitle"></h3>
+            <button type="button" class="btn-close" aria-label="Close" onclick="closeDetailsModal()"></button>
+        </div>
+        <div class="modal-body">
+        <div id="detailsInfo"></div>
+        <div id="detailsAttachment" class="mt-2 mb-2"></div>
+        <div>
+            <strong>الملاحظات:</strong>
+            <div class="notes-list" id="notesList"></div>
+            <form id="noteForm" onsubmit="addNote(event)">
+                <input type="hidden" id="noteTaskId">
+                <div class="input-group mb-1">
+                    <input type="text" id="noteInput" class="form-control" placeholder="أضف ملاحظة جديدة" required>
+                    <button type="submit" class="btn btn-success">إضافة</button>
+                </div>
+            </form>
+        </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div>جميع الحقوق محفوظة © إدارة المهام الذكية 2025</div>
+        <div class="social-icons">
+            <a href="https://twitter.com" target="_blank" title="تويتر"><i class="fab fa-twitter"></i></a>
+            <a href="https://facebook.com" target="_blank" title="فيسبوك"><i class="fab fa-facebook"></i></a>
+            <a href="https://linkedin.com" target="_blank" title="لينكدإن"><i class="fab fa-linkedin"></i></a>
+            <a href="https://wa.me/" target="_blank" title="واتساب"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
