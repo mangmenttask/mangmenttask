@@ -555,4 +555,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check reminders every minute
     setInterval(checkReminders, 60000);
 });
-
